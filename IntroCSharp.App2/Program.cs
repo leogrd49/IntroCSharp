@@ -1,39 +1,30 @@
-﻿using System.Reflection.Emit;
-using System;
+﻿using IntroCSharp.App2.Model;
+using System.Net.NetworkInformation;
 
 internal class Program
 {
-    // Liste element de la classe
-    internal static List<string> classMember = new List<string>();
-
     /// <summary>
-    /// Point d'entée de l'application
+    /// Liste des membres de la classe
     /// </summary>
-    /// <param name="args">arguements</param>
+    internal static List<ClassMember> classMember = new List<ClassMember>();
+    /// <summary>
+    /// Point d'entrée de l'application
+    /// </summary>
+    /// <param name="args">arguments</param>
     private static void Main(string[] args)
     {
-        Start();
         ShowMenu();
     }
 
-    private static void Start()
-    {
-        classMember.Add("Toto");
-        classMember.Add("Titi");
-        classMember.Add("Tata");
-        classMember.Add("Tonton");
-        classMember.Add("Tutu");
-    }
-
     /// <summary>
-    /// Affiche le Menu
+    /// Affiche le menu
     /// </summary>
     private static void ShowMenu()
     {
         bool isFinished = false;
         do
         {
-            Console.WriteLine("Saisiez une action");
+            Console.WriteLine("Saisissez une action : ");
             Console.WriteLine("1 - Ajouter");
             Console.WriteLine("2 - Modifier");
             Console.WriteLine("3 - Supprimer");
@@ -53,70 +44,105 @@ internal class Program
                 case "3":
                     Supprimer();
                     break;
-                case "0":
-                    isFinished = true;
-                    break;
                 case "4":
                     Lister();
                     break;
-                default:
-                    Console.WriteLine("Saisie Incorect, Please retry");
+                case "0":
+                    isFinished = true;
                     break;
+                default:
+                    {
+                        Console.WriteLine("La saisie est incorrecte");
+                        break;
+                    }
             }
-
-
         } while (!isFinished);
     }
 
     /// <summary>
-    /// Ajout d'un membre à la classe.
+    /// Ajouter un membre
     /// </summary>
     private static void AddClassMember()
     {
-        Console.WriteLine("Indiquez le nom et le prénom de la personne à ajouter");
-        string? userInput = Console.ReadLine();
-        
-        // On ajouter userInput à la fin de la notre liste
-        classMember.Add(userInput ?? "Inconue");
-    }
+        Console.WriteLine("Indquez le nom de la personne à ajouter : ");
+        string? userInputLastName = Console.ReadLine();
 
-    /// <summary>
-    /// Lister (Afficher) la classe.
-    /// </summary>
-    private static void Lister()
-    {
-        Console.WriteLine("Liste des membre: ");
-        foreach (string name in classMember)
-        {
-            Console.WriteLine($" -> {name}");
-        }
-    }
+        Console.WriteLine("Indquez le prénom de la personne à ajouter : ");
+        string? userInputFirstName = Console.ReadLine();
 
-    /// <summary>
-    /// Modifier la liste
-    /// </summary>
-    private static void Modifier()
-    {
-        Console.WriteLine("Indiquez le nom et le prénom de la personne à Modifier");
-        string? toEdit = Console.ReadLine();
+        ClassMember classmate = new ClassMember(userInputLastName, userInputFirstName);
+        //On ajout userInput à la fin de notre liste.
+        classMember.Add(classmate);
 
-        classMember.Remove(toEdit);
-
-        Console.WriteLine("Quel est son nouveau nom ?: ");
-        string? newName = Console.ReadLine();
-
-        classMember.Add(newName);
 
     }
 
     /// <summary>
-    /// Supprimer un element de la liste
+    /// Supprimer un membre
     /// </summary>
+    /// <exception cref="NotImplementedException"></exception>
     private static void Supprimer()
     {
-        Console.WriteLine("Indiquez le nom et prénom de la personne à Supprimer");
-        string? toSupprimer = Console.ReadLine();
+        ClassMember selectedClassMember = null;
+        do
+        {
+            Console.WriteLine("Indquez le nom et le prénom de la personne à modifier : ");
+            string? searchLastName = Console.ReadLine();
+            Console.WriteLine("Indquez le nom et le prénom de la personne à modifier : ");
+            string? searchFirstName = Console.ReadLine();
 
-        classMember.Remove(toSupprimer);
+            foreach (ClassMember classmate in classMember)
+            {
+                if (classmate.FirstName == searchFirstName && classmate.LastName == searchLastName)
+                {
+                    selectedClassMember = classmate;
+                }
+            }
+        } while (selectedClassMember == null);
+
+        classMember.Remove(selectedClassMember);
+    }
+
+    /// <summary>
+    /// Modifier un membre
+    /// </summary>
+    /// <exception cref="NotImplementedException"></exception>
+    private static void Modifier()
+    {
+        ClassMember selectedClassMember = null;
+        do
+        {
+            Console.WriteLine("Indquez le nom et le prénom de la personne à modifier : ");
+            string? searchLastName = Console.ReadLine();
+            Console.WriteLine("Indquez le nom et le prénom de la personne à modifier : ");
+            string? searchFirstName = Console.ReadLine();
+
+            foreach (ClassMember classmate in classMember)
+            {
+                if (classmate.FirstName == searchFirstName && classmate.LastName == searchLastName)
+                {
+                    selectedClassMember = classmate;
+                }
+            }
+        } while (selectedClassMember == null);
+
+        Console.WriteLine("Indquez le nom et le prénom de la personne à modifier : ");
+        selectedClassMember.LastName = Console.ReadLine() ?? "non renseigné";
+        Console.WriteLine("Indquez le nom et le prénom de la personne à modifier : ");
+        selectedClassMember.FirstName = Console.ReadLine() ?? "non renseigné";
+    }
+
+    /// <summary>
+    /// Lister les membres de la classe
+    /// </summary>
+    /// <exception cref="NotImplementedException"></exception>
+    private static void Lister()
+    {
+        Console.WriteLine("Liste des membres : ");
+
+        foreach (ClassMember classmate in classMember)
+        {
+            Console.WriteLine($" -> {classmate.Fullname}");
+        }
     }
 }
