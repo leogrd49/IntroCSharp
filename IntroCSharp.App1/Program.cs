@@ -45,7 +45,7 @@ switch (level_difficulty)
         break;
 
     case "69":
-        //Hard
+        //SECRET
         nb_secret = random.Next(0, 100);
         vie = 1;
         level = 69;
@@ -53,30 +53,46 @@ switch (level_difficulty)
 }
 
 
-Console.WriteLine($"Votre niveau: {level} ");
+Console.WriteLine($"Votre niveau: {level}.");
 
 
 while (iswon == false || vie != 0)
 {
     //print début du jeu
-    Console.WriteLine("Devine le nombre que j'ai généré ?");
+    Console.WriteLine("Devine le nombre que j'ai généré ?"); 
 
-    if (nb_choisi == null)
+    //TRAITEMENT NB str en INT
+    //NULL ERROR
+    try
     {
-        Console.WriteLine("NON on peux pas !");
-        nb_choisi = "0";
+        nb_choisi = Console.ReadLine();
+        nb_choisi_int = int.Parse(nb_choisi);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("Invalide ! ");
+
     }
 
-    
 
-    nb_choisi = Console.ReadLine();
-    nb_choisi_int = int.Parse(nb_choisi);
+    // PLUS PETIT | GRAND
+    if (nb_choisi_int > nb_secret)
+    {
+        Console.WriteLine("Plus Petit !");
+    }
+
+    if (nb_choisi_int < nb_secret)
+    {
+        Console.WriteLine("Plus Grand !");
+    }
 
 
+    //GG | LOOSE
     if (nb_choisi_int == nb_secret)
     {
         Console.WriteLine("gg");
         iswon = true;
+        break;
     }
     else
     {
@@ -85,9 +101,13 @@ while (iswon == false || vie != 0)
         Console.WriteLine($"Il te reste {vie} vie(s)");
     }
 
+
+    // LIFE COUNTER
     if (vie == 0)
     {
         Console.WriteLine("Ta pu de vie ");
         break;
     }
+
+
 }
