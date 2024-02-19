@@ -1,113 +1,97 @@
-﻿//Generation nb aléatoire entre 0 - 10
+﻿// Init Var
 Random random = new Random();
-int nb_secret = random.Next(0, 0);
+int nb_secret = -1;
+int vie = 3;
 
+// Select level difficulty
+int level = SelectDifficulty(random, ref nb_secret, ref vie);
 
-//get et traitement nb
-string? nb_choisi = null; Console.ReadLine();
-int nb_choisi_int = -1;
-
-//Booléen qui verif le jeu
-bool iswon = false;
-
-//Life
-int? vie = 3;
-
-
-//DEBUT GAME
-Console.WriteLine("Difficulté ? 1:Easy | 2:Normal | 3: Hard ");
-string? level_difficulty = Console.ReadLine();
-int level = 0;
-
-
-//DIFFUCULTY
-switch (level_difficulty)
-{
-    case "1":
-        //Easy
-        nb_secret = random.Next(0, 10);
-        vie = 3;
-        level = 1;
-        break;
-
-    case "2":
-        //Normal
-        nb_secret = random.Next(0, 50);
-        vie = 5;
-        level = 2;
-        break;
-
-    case "3":
-        //Hard
-        nb_secret = random.Next(0, 100);
-        vie = 10;
-        level = 3;
-        break;
-
-    case "69":
-        //SECRET
-        nb_secret = random.Next(0, 100);
-        vie = 1;
-        level = 69;
-        break;
-}
-
-
+// Affichage niveau choisi
 Console.WriteLine($"Votre niveau: {level}.");
 
-
-while (iswon == false || vie != 0)
+// Boucle principale du jeu
+while (true)
 {
-    //print début du jeu
-    Console.WriteLine("Devine le nombre que j'ai généré ?"); 
+    // Affichage du message demandant de deviner le nombre
+    Console.WriteLine("Devine le nombre que j'ai généré ?");
 
-    //TRAITEMENT NB str en INT
-    //NULL ERROR
-    try
-    {
-        nb_choisi = Console.ReadLine();
-        nb_choisi_int = int.Parse(nb_choisi);
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine("Invalide ! ");
+    // Lecture et traitement du nombre choisi par le joueur
+    int nb_choisi_int = GetNumberFromUser();
 
-    }
-
-
-    // PLUS PETIT | GRAND
+    // Comparaison du nombre choisi avec le nombre secret
     if (nb_choisi_int > nb_secret)
     {
         Console.WriteLine("Plus Petit !");
     }
-
-    if (nb_choisi_int < nb_secret)
+    else if (nb_choisi_int < nb_secret)
     {
         Console.WriteLine("Plus Grand !");
     }
-
-
-    //GG | LOOSE
-    if (nb_choisi_int == nb_secret)
-    {
-        Console.WriteLine("gg");
-        iswon = true;
-        break;
-    }
     else
     {
-        Console.WriteLine($"Noob");
-        vie -= 1;
-        Console.WriteLine($"Il te reste {vie} vie(s)");
+        Console.WriteLine("gg");
+        break; // Sortie de la boucle si le nombre est deviné
     }
 
-
-    // LIFE COUNTER
+    // Décrémentation du nombre de vies et vérification si le joueur a perdu
+    vie--;
     if (vie == 0)
     {
         Console.WriteLine("Ta pu de vie ");
         break;
     }
 
+    // Affichage du nombre de vies restantes
+    Console.WriteLine($"Il te reste {vie} vie(s)");
+}
 
+// Méthode pour sélectionner la difficulté du jeu
+static int SelectDifficulty(Random random, ref int nb_secret, ref int vie)
+{
+Console.WriteLine("Difficulté ? 1:Easy | 2:Normal | 3: Hard ");
+string level_difficulty = Console.ReadLine();
+int level = 0;
+
+switch (level_difficulty)
+{
+    case "1":
+        nb_secret = random.Next(0, 10);
+        vie = 3;
+        level = 1;
+        break;
+    case "2":
+        nb_secret = random.Next(0, 50);
+        vie = 5;
+        level = 2;
+        break;
+    case "3":
+        nb_secret = random.Next(0, 100);
+        vie = 10;
+        level = 3;
+        break;
+    case "69":
+        nb_secret = random.Next(0, 100);
+        vie = 1;
+        level = 69;
+        break;
+}
+
+return level;
+}
+
+// Méthode pour obtenir et valider le nombre choisi par le joueur
+static int GetNumberFromUser()
+{
+while (true)
+{
+    string input = Console.ReadLine();
+    if (int.TryParse(input, out int result))
+    {
+        return result;
+    }
+    else
+    {
+        Console.WriteLine("Invalide ! ");
+    }
+}
 }
