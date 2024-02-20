@@ -19,5 +19,11 @@ internal class Brand
     /// <summary>
     /// Liste des biere de la marque
     /// </summary>
-    public List<Beer> Beers { get; set; }
+    public List<Beverage> Beverages { get; set; }
+
+
+    public Brand()
+    {
+        Beverages = new List<Beverage>();
+    }
 }
